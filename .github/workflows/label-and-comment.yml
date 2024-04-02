@@ -1,8 +1,11 @@
-name: Label & comment issues #the name of the workflow
+name: Label & comment issues and pull requests #the name of the workflow
 on: # This action will trigger when an issue is reopened or opened.
   issues:
     types:
       - reopened
+      - opened
+    pull_request:
+      types:
       - opened
 jobs: # The jobs that run in this workflow
   label_issues: # the first job is named as label_issues
@@ -35,6 +38,7 @@ jobs: # The jobs that run in this workflow
           issue-number: ${{ github.event.issue.number }}
           body: |
             The issue is now resolved. Thank you for reporting!
+
 # Comment on when an users opens the first pull request 
       - name: Comment on pull request
         if: github.event_name == 'pull_request' && github.event.action == 'opened'
