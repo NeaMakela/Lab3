@@ -5,9 +5,9 @@ on:
     types:
       - reopened
       - opened
-    pull_request:
-      types:
-        - opened
+  pull_request:
+    types:
+      - opened
 
 jobs:
   label_issues:
@@ -27,6 +27,7 @@ jobs:
               repo: context.repo.repo,
               labels: ["issue", "fix"]
             })
+
       # Comment on new issue
       - name: Comment on new issue
         if: github.event_name == 'issues' && github.event.action == 'opened'
@@ -46,7 +47,7 @@ jobs:
             The issue is now resolved. Thank you for reporting!
 
       # Comment on pull request
-      - name: Comment on pull request
+      - name: Comment on opened pull request
         if: github.event_name == 'pull_request' && github.event.action == 'opened'
         uses: peter-evans/create-or-update-comment@v1
         with:
