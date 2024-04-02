@@ -17,6 +17,7 @@ jobs:
       issues: write
     steps:
       - name: Attach label to issues
+        if: github.event_name == 'issues'
         uses: actions/github-script@v6
         with:
           script: |
