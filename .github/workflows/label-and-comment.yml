@@ -28,6 +28,7 @@ jobs:
             })
 
       - name: Comment on new issue
+        if: github.event_name == 'issues' && github.event.action == 'opened'
         uses: peter-evans/create-or-update-comment@v1
         with:
           issue-number: ${{ github.event.issue.number }}
@@ -35,7 +36,7 @@ jobs:
             Thanks for opening this issue! We'll take a look as soon as possible.
 
       - name: Comment on closed issue
-        if: github.event_name == 'issues' && github.event.issue.state == 'closed'
+        if: github.event_name == 'issues' && github.event.action == 'closed'
         uses: peter-evans/create-or-update-comment@v1
         with:
           issue-number: ${{ github.event.issue.number }}
