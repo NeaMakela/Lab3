@@ -43,7 +43,7 @@ jobs:
             The issue is now resolved. Thank you for reporting!
 
       - name: Comment on pull request
-        if: github.event_name == 'pull_request' && github.event.pull_request.action == 'opened'
+        if: github.event_name == 'pull_request' && github.event.action == 'opened'
         uses: peter-evans/create-or-update-comment@v1
         with:
           issue-number: ${{ github.event.pull_request.number }}
