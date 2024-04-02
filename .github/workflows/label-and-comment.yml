@@ -5,10 +5,9 @@ on:
     types:
       - reopened
       - opened
-      - closed
-  pull_request:
-    types:
-      - opened
+    pull_request:
+      types:
+        - opened
 
 jobs:
   label_issues:
@@ -16,8 +15,9 @@ jobs:
     permissions:
       issues: write
     steps:
+      # Attach label to issues
       - name: Attach label to issues
-        if: github.event_name == 'issues'
+        if: github.event_name == 'issues' && github.event.action == 'opened'
         uses: actions/github-script@v6
         with:
           script: |
@@ -27,7 +27,7 @@ jobs:
               repo: context.repo.repo,
               labels: ["issue", "fix"]
             })
-
+      # Comment on new issue
       - name: Comment on new issue
         if: github.event_name == 'issues' && github.event.action == 'opened'
         uses: peter-evans/create-or-update-comment@v1
@@ -36,6 +36,7 @@ jobs:
           body: |
             Thanks for opening this issue! We'll take a look as soon as possible.
 
+      # Comment on closed issue
       - name: Comment on closed issue
         if: github.event_name == 'issues' && github.event.action == 'closed'
         uses: peter-evans/create-or-update-comment@v1
@@ -44,6 +45,7 @@ jobs:
           body: |
             The issue is now resolved. Thank you for reporting!
 
+      # Comment on pull request
       - name: Comment on pull request
         if: github.event_name == 'pull_request' && github.event.action == 'opened'
         uses: peter-evans/create-or-update-comment@v1
