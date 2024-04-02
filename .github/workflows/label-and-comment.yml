@@ -28,5 +28,18 @@ jobs: # The jobs that run in this workflow
            Thanks for opening this issue! We'll take a look as soon as possible.
 
 # Comment on when an issue is closed
-
+      - name: Comment on closed issue
+        if: github.event_name == 'issues' && github.event.action == 'closed'
+        uses: peter-evans/create-or-update-comment@v1
+        with:
+          issue-number: ${{ github.event.issue.number }}
+          body: |
+            The issue is now resolved. Thank you for reporting!
 # Comment on when an users opens the first pull request 
+      - name: Comment on pull request
+        if: github.event_name == 'pull_request' && github.event.action == 'opened'
+        uses: peter-evans/create-or-update-comment@v1
+        with:
+          issue-number: ${{ github.event.issue.number }}
+          body: |
+            Thanks for opening this pull request! We will review it as soon as possible. 
