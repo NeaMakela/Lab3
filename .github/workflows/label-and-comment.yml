@@ -1,13 +1,13 @@
 name: Label & comment issues
-
 on:
   issues:
     types:
       - reopened
       - opened
-    pull_request:
-      types:
-        - opened
+    closed
+  pull_request:
+    types:
+      - opened
   workflow_dispatch:
 
 jobs:
@@ -16,36 +16,32 @@ jobs:
     permissions:
       issues: write
     steps:
-      - name: Attach label to issues
+      - name: Debug step
+        run: echo "Debugging: ${{ github.event_name }} ${GITHUB_EVENT_NAME} ${GITHUB_EVENT_PATH} ${GITHUB_EVENT_PATH}}"
+        env:
+          GITHUB_EVENT_NAME: ${{ toJson(github.event_name) }}
+          GITHUB_EVENT_PATH: ${{ toJson(github.event_path) }}
+      - name: attach label to issues
         uses: actions/github-script@v6
-        with:
-          script: |
-            github.rest.issues.addLabels({
-              issue_number: context.issue.number,
-              owner: context.repo.owner,
-              repo: context.repo.repo,
-              labels: ["issue", "fix"]
-            })
-
+        ...
       - name: Comment on new issue
         uses: peter-evans/create-or-update-comment@v1
-        with:
-          issue-number: ${{ github.event.issue.number }}
-          body: |
-            Thanks for opening this issue! We'll take a look as soon as possible.
-
+        ...
       - name: Comment on closed issue
         if: github.event_name == 'issues' && github.event.action == 'closed'
+        run: echo "Issue closed: ${{ github.event.issue.number }}"
         uses: peter-evans/create-or-update-comment@v1
         with:
           issue-number: ${{ github.event.issue.number }}
           body: |
             The issue is now resolved. Thank you for reporting!
-
+          token: ${{ secrets.GITHUB_TOKEN }}
       - name: Comment on pull request
         if: github.event_name == 'pull_request' && github.event.action == 'opened'
+        run: echo "Pull request opened: ${{ github.event.pull_request.number }}"
         uses: peter-evans/create-or-update-comment@v1
         with:
-          issue-number: ${{ github.event.pull_request.number }}
+          issue-number: ${{ github.event.issue.number }}
           body: |
             Thanks for opening this pull request! We will review it as soon as possible.
+          token: ${{ secrets.GITHUB_TOKEN }}
