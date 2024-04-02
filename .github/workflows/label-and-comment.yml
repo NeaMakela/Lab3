@@ -35,7 +35,7 @@ jobs:
             Thanks for opening this issue! We'll take a look as soon as possible.
 
       - name: Comment on closed issue
-        if: github.event_name == 'issues' && github.event.action == 'closed'
+        if: github.event_name == 'issues' && github.event.issue.state == 'closed'
         uses: peter-evans/create-or-update-comment@v1
         with:
           issue-number: ${{ github.event.issue.number }}
@@ -43,7 +43,7 @@ jobs:
             The issue is now resolved. Thank you for reporting!
 
       - name: Comment on pull request
-        if: github.event_name == 'pull_request' && github.event.action == 'opened'
+        if: github.event_name == 'pull_request' && github.event.pull_request.action == 'opened'
         uses: peter-evans/create-or-update-comment@v1
         with:
           issue-number: ${{ github.event.pull_request.number }}
